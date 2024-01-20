@@ -10,11 +10,23 @@ document
     const formData = new FormData(event.target);
 
     try {
+      // Get the email address from the form
+      const email = formData.get("email");
+
+      // Check if the email is provided
+      if (!email) {
+        console.error("Email address is required");
+        return;
+      }
+
       // Send a POST request to the Netlify serverless function
       const response = await fetch("/.netlify/functions/submitForm", {
         method: "POST",
-        // Convert FormData to a plain object and stringify it
+        // Convert FormData to a plain object
         body: JSON.stringify(Object.fromEntries(formData)),
+        headers: {
+          "Content-Type": "application/json", // Specify content type
+        },
       });
 
       // Check if the request was successful (status code 2xx)
@@ -23,7 +35,7 @@ document
         console.log("Form submitted successfully");
 
         // Optionally, you can redirect the user to a thank you page or show a success message.
-        // For example, uncomment the following lines to redirect to a thank you page:
+        // For example, uncomment the following line to redirect to a thank you page:
         // window.location.href = '/thank-you.html';
       } else {
         // Log an error message to the console
